@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -38,8 +36,11 @@ public class ProdutoResource {
 
     @ApiOperation(value = "Retorna um produto único")
     @GetMapping("/produtos/{id}")
-    public Produto getProdutoById(@PathVariable("id") Long id){
-        return produtosRepository.findById(id).orElse(null);
+    public ResponseEntity getProdutoById(@PathVariable("id") Long id){
+        if(produtosRepository.existsById(id)){
+            return ResponseEntity.ok(produtosRepository.findById(id));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @ApiOperation(value = "Salvar um produto")
